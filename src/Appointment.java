@@ -59,9 +59,8 @@ public class Appointment {
 
     public static LocalDate askDate(Scanner scanner) {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        LocalDate date = null;
 
-        while (date == null) {
+        while (true) {
             System.out.print("Enter appointment date (MM/DD/YYYY): ");
             String input = scanner.nextLine();
             try {
@@ -69,31 +68,26 @@ public class Appointment {
                 if (parsed.isBefore(LocalDate.now())) {
                     System.out.println("[!] Date cannot be in the past.");
                 } else {
-                    date = parsed;
+                    return parsed;
                 }
             } catch (DateTimeParseException e) {
                 System.out.println("[!] Invalid date format. Please use MM/DD/YYYY.");
             }
         }
-
-        return date;
     }
 
     public static LocalTime askTime(Scanner scanner) {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("hh:mm a");
-        LocalTime time = null;
 
-        while (time == null) {
+        while (true) {
             System.out.print("Enter preferred start time (e.g. 02:30 PM): ");
             String input = scanner.nextLine().trim().toUpperCase();
             try {
-                time = LocalTime.parse(input, fmt);
+                return LocalTime.parse(input, fmt);
             } catch (DateTimeParseException e) {
                 System.out.println("[!] Invalid time format. Please use hh:mm AM/PM.");
             }
         }
-
-        return time;
     }
 
     public void printSummary() {

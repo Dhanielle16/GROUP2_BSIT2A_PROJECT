@@ -2,56 +2,70 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class StylistMenu {
 
-    private static List<Stylist> stylists = new ArrayList<>();
+public class StylistMenu {
+    private static final List<Stylist> STYLISTS = new ArrayList<>();
 
     static {
-        stylists.add(new Stylist("Ana Reyes", "Haircuts & Styling"));
-        stylists.add(new Stylist("Mark Santos", "Hair Color Specialist"));
-        stylists.add(new Stylist("Liza Cruz", "Treatments & Rebonding"));
-        stylists.add(new Stylist("Joel Ramos", "All-around Stylist"));
+        STYLISTS.add(new Stylist("Ana Reyes", "Haircuts & Styling"));
+        STYLISTS.add(new Stylist("Mark Santos", "Hair Color Specialist"));
+        STYLISTS.add(new Stylist("Liza Cruz", "Treatments & Rebonding"));
+        STYLISTS.add(new Stylist("Joel Ramos", "All-around Stylist"));
     }
 
-    public List<Stylist> getAllStylists() {
-        return stylists;
+    public static List<Stylist> getAllStylists() {
+        return STYLISTS;
     }
 
     public static void addStylist(Stylist stylist) {
-        stylists.add(stylist);
+        STYLISTS.add(stylist);
     }
 
     public static boolean removeStylist(String name) {
-        return stylists.removeIf(s -> s.getName().equalsIgnoreCase(name));
+        return STYLISTS.removeIf(s -> s.getName().equalsIgnoreCase(name));
+    }
+
+    public static boolean markBusy(String name) {
+        return setAvailability(name, false);
+    }
+
+    public static boolean markAvailable(String name) {
+        return setAvailability(name, true);
+    }
+
+    private static boolean setAvailability(String name, boolean available) {
+        for (Stylist s : STYLISTS) {
+            if (s.getName().equalsIgnoreCase(name)) {
+                s.setAvailable(available);
+                return true;
+            }
+        }
+        return false;
     }
 
 
-    public Stylist chooseStylist(Scanner scanner, List<Stylist> availableStylists) {
-        Stylist selected = null;
-
-        while (selected == null) {
+    public static Stylist chooseStylist(Scanner scanner, List<Stylist> available) {
+        while (true) {
             System.out.println("\n--- STYLISTS AVAILABLE FOR THIS TIME SLOT ---");
-            for (int i = 0; i < availableStylists.size(); i++) {
-                Stylist s = availableStylists.get(i);
+            for (int i = 0; i < available.size(); i++) {
+                Stylist s = available.get(i);
                 System.out.printf("%d. %-15s - %s%n", i + 1, s.getName(), s.getSpecialty());
             }
             System.out.print("Choose your hairstylist: ");
 
-            if (scanner.hasNextInt()) {
-                int choice = scanner.nextInt();
-                scanner.nextLine();
-
-                if (choice >= 1 && choice <= availableStylists.size()) {
-                    selected = availableStylists.get(choice - 1);
-                } else {
-                    System.out.println("[!] Invalid choice. Please pick a number from the list.");
-                }
-            } else {
+            if (!scanner.hasNextInt()) {
                 System.out.println("[!] Please enter a valid number.");
                 scanner.nextLine();
+                continue;
             }
-        }
 
-        return selected;
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            if (choice >= 1 && choice <= available.size()) {
+                return available.get(choice - 1);
+            }
+            System.out.println("[!] Invalid choice. Try again.");
+        }
     }
 }

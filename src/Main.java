@@ -7,28 +7,20 @@ public class Main {
 
         while (running) {
             printMainMenu();
-            System.out.print("Enter your choice: ");
-            if (scanner.hasNextInt()) {
-                int choice = scanner.nextInt();
-                scanner.nextLine();
+            int choice = InputUtils.readMenuChoice(scanner, 1, 3);
 
-                switch (choice) {
-                    case 1:
-                        handleLogIn(scanner);
-                        break;
-                    case 2:
-                        handleSignUp(scanner);
-                        break;
-                    case 3:
-                        System.out.println("\nExiting system. Goodbye!");
-                        running = false;
-                        break;
-                    default:
-                        System.out.println("\n[!] Invalid choice. Please select 1, 2, or 3.");
-                }
-            } else {
-                System.out.println("\n[!] Input must be a valid number.");
-                scanner.nextLine();
+            switch (choice) {
+                case 1:
+                    handleLogIn(scanner);
+                    break;
+                case 2:
+                    String username = customerSignUpPrompt(scanner);
+                    Customermenu.start(scanner, username);
+                    break;
+                case 3:
+                    System.out.println("\nExiting system. Goodbye!");
+                    running = false;
+                    break;
             }
         }
 
@@ -45,56 +37,26 @@ public class Main {
         System.out.println("=================================");
     }
 
-
-    private static int askRole(Scanner scanner, String action) {
-        while (true) {
-            System.out.println("\n--- " + action.toUpperCase() + " ---");
-            System.out.println("1. " + action + " as Customer");
-            System.out.println("2. " + action + " as Clerk");
-            System.out.println("3. Back");
-            System.out.print("Enter your choice: ");
-
-            if (scanner.hasNextInt()) {
-                int choice = scanner.nextInt();
-                scanner.nextLine();
-
-                if (choice >= 1 && choice <= 3) {
-                    return choice;
-                }
-                System.out.println("\n[!] Invalid choice. Please select 1, 2, or 3.");
-            } else {
-                System.out.println("\n[!] Input must be a valid number.");
-                scanner.nextLine();
-            }
-        }
-    }
-
     private static void handleLogIn(Scanner scanner) {
-        int role = askRole(scanner, "Log In");
+        System.out.println("\n--- LOG IN ---");
+        System.out.println("1. Log In as Customer");
+        System.out.println("2. Log In as Admin");
+        System.out.println("3. Back");
 
-        if (role == 1) {
-            String username = customerLoginPrompt(scanner);
-            Customermenu.start(scanner, username);
-        } else if (role == 2) {
-            if (clerkLoginPrompt(scanner)) {
-                Clerkmenu.start(scanner);
-            }
+        int role = InputUtils.readMenuChoice(scanner, 1, 3);
+
+        switch (role) {
+            case 1:
+                String customerUsername = customerLoginPrompt(scanner);
+                Customermenu.start(scanner, customerUsername);
+                break;
+            case 2:
+                String adminUsername = adminLoginPrompt(scanner);
+                Adminmenu.start(scanner, adminUsername);
+                break;
+            case 3:
+                break;
         }
-
-    }
-
-    private static void handleSignUp(Scanner scanner) {
-        int role = askRole(scanner, "Sign Up");
-
-        if (role == 1) {
-            String username = customerSignUpPrompt(scanner);
-            Customermenu.start(scanner, username);
-        } else if (role == 2) {
-            if (clerkSignUpPrompt(scanner)) {
-                Clerkmenu.start(scanner);
-            }
-        }
-
     }
 
     private static String customerLoginPrompt(Scanner scanner) {
@@ -102,7 +64,7 @@ public class Main {
         System.out.print("Username: ");
         String username = scanner.nextLine();
         System.out.print("Password: ");
-        String password = scanner.nextLine();
+        scanner.nextLine();
 
         System.out.println("Logging in customer: " + username + "...");
         return username;
@@ -113,35 +75,22 @@ public class Main {
         System.out.print("Enter Username: ");
         String username = scanner.nextLine();
         System.out.print("Enter Email: ");
-        String email = scanner.nextLine();
+        scanner.nextLine();
         System.out.print("Enter Password: ");
-        String password = scanner.nextLine();
+        scanner.nextLine();
 
         System.out.println("Account created successfully for: " + username);
         return username;
     }
 
-    private static boolean clerkLoginPrompt(Scanner scanner) {
-        System.out.println("\n--- CLERK LOG IN ---");
-        System.out.print("Clerk Username: ");
+    private static String adminLoginPrompt(Scanner scanner) {
+        System.out.println("\n--- ADMIN LOG IN ---");
+        System.out.print("Username: ");
         String username = scanner.nextLine();
-        System.out.print("Clerk Password: ");
-        String password = scanner.nextLine();
+        System.out.print("Password: ");
+        scanner.nextLine();
 
-        Clerk clerk = new Clerk(username);
-        System.out.println("Logging in clerk: " + clerk.getUsername() + "...");
-        return true;
-    }
-
-    private static boolean clerkSignUpPrompt(Scanner scanner) {
-        System.out.println("\n--- CLERK SIGN UP ---");
-        System.out.print("Enter Clerk Username: ");
-        String username = scanner.nextLine();
-        System.out.print("Enter Password: ");
-        String password = scanner.nextLine();
-
-        Clerk clerk = new Clerk(username);
-        System.out.println("Clerk account created for: " + clerk.getUsername());
-        return true;
+        System.out.println("Logging in admin: " + username + "...");
+        return username;
     }
 }

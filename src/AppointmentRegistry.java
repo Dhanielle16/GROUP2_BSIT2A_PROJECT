@@ -5,10 +5,10 @@ import java.util.List;
 
 
 public class AppointmentRegistry {
-    private static List<Appointment> bookedAppointments = new ArrayList<>();
+    private static final List<Appointment> BOOKED_APPOINTMENTS = new ArrayList<>();
 
     public static boolean isStylistAvailable(Stylist stylist, LocalDate date, LocalTime start, LocalTime end) {
-        for (Appointment appt : bookedAppointments) {
+        for (Appointment appt : BOOKED_APPOINTMENTS) {
             if (appt.getStylist().getName().equals(stylist.getName())
                     && appt.overlaps(date, start, end)) {
                 return false;
@@ -18,10 +18,10 @@ public class AppointmentRegistry {
     }
 
     public static void addAppointment(Appointment appointment) {
-        bookedAppointments.add(appointment);
+        BOOKED_APPOINTMENTS.add(appointment);
     }
 
     public static List<Appointment> getAllAppointments() {
-        return bookedAppointments;
+        return BOOKED_APPOINTMENTS;
     }
 }

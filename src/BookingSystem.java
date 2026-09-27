@@ -10,25 +10,22 @@ public class BookingSystem {
         System.out.println("\n--- BOOK AN APPOINTMENT ---");
 
 
-        ServiceMenu serviceMenu = new ServiceMenu();
-        Service chosenService = serviceMenu.chooseService(scanner);
+        Service chosenService = ServiceMenu.chooseService(scanner);
 
 
         LocalDate date = Appointment.askDate(scanner);
 
 
-        StylistMenu stylistMenu = new StylistMenu();
         LocalTime startTime;
-        LocalTime endTime;
         List<Stylist> availableStylists;
 
         while (true) {
             startTime = Appointment.askTime(scanner);
-            endTime = startTime.plusMinutes(chosenService.getDurationMinutes() + Appointment.BUFFER_MINUTES);
+            LocalTime endTime = startTime.plusMinutes(chosenService.getDurationMinutes() + Appointment.BUFFER_MINUTES);
 
             availableStylists = new ArrayList<>();
-            for (Stylist s : stylistMenu.getAllStylists()) {
-                if (AppointmentRegistry.isStylistAvailable(s, date, startTime, endTime)) {
+            for (Stylist s : StylistMenu.getAllStylists()) {
+                if (s.isAvailable() && AppointmentRegistry.isStylistAvailable(s, date, startTime, endTime)) {
                     availableStylists.add(s);
                 }
             }
@@ -42,7 +39,7 @@ public class BookingSystem {
         }
 
 
-        Stylist chosenStylist = stylistMenu.chooseStylist(scanner, availableStylists);
+        Stylist chosenStylist = StylistMenu.chooseStylist(scanner, availableStylists);
 
 
         Appointment appointment = new Appointment(customerName, chosenService, chosenStylist, date, startTime);

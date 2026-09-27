@@ -20,4 +20,16 @@ public class Service {
     public double getPrice() {
         return price;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDurationMinutes(int durationMinutes) {
+        this.durationMinutes = durationMinutes;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }
