@@ -3,10 +3,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class StylistMenu {
-    private List<Stylist> stylists;
+    // Static/shared so that stylists added or removed by a clerk
+    // persist across every part of the program (not reset per instance).
+    private static List<Stylist> stylists = new ArrayList<>();
 
-    public StylistMenu() {
-        stylists = new ArrayList<>();
+    static {
         stylists.add(new Stylist("Ana Reyes", "Haircuts & Styling"));
         stylists.add(new Stylist("Mark Santos", "Hair Color Specialist"));
         stylists.add(new Stylist("Liza Cruz", "Treatments & Rebonding"));
@@ -17,7 +18,18 @@ public class StylistMenu {
         return stylists;
     }
 
+    public static void addStylist(Stylist stylist) {
+        stylists.add(stylist);
+    }
 
+    public static boolean removeStylist(String name) {
+        return stylists.removeIf(s -> s.getName().equalsIgnoreCase(name));
+    }
+
+    /**
+     * Lets the user choose from a pre-filtered list of stylists
+     * (e.g. only those available at the requested time slot).
+     */
     public Stylist chooseStylist(Scanner scanner, List<Stylist> availableStylists) {
         Stylist selected = null;
 

@@ -6,21 +6,27 @@ import java.util.Scanner;
 
 public class Appointment {
 
-
+    // Cleanup/prep buffer added after every service
     public static final int BUFFER_MINUTES = 15;
 
+    private String customerName;
     private Service service;
     private Stylist stylist;
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
 
-    public Appointment(Service service, Stylist stylist, LocalDate date, LocalTime startTime) {
+    public Appointment(String customerName, Service service, Stylist stylist, LocalDate date, LocalTime startTime) {
+        this.customerName = customerName;
         this.service = service;
         this.stylist = stylist;
         this.date = date;
         this.startTime = startTime;
         this.endTime = startTime.plusMinutes(service.getDurationMinutes() + BUFFER_MINUTES);
+    }
+
+    public String getCustomerName() {
+        return customerName;
     }
 
     public Service getService() {
@@ -43,7 +49,10 @@ public class Appointment {
         return endTime;
     }
 
-
+    /**
+     * Returns true if this appointment's time block (including buffer)
+     * overlaps with the given date/start/end window.
+     */
     public boolean overlaps(LocalDate otherDate, LocalTime otherStart, LocalTime otherEnd) {
         if (!this.date.equals(otherDate)) {
             return false;
@@ -95,6 +104,7 @@ public class Appointment {
         DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("hh:mm a");
 
         System.out.println("\n===== APPOINTMENT CONFIRMATION =====");
+        System.out.println("Customer      : " + customerName);
         System.out.println("Service       : " + service.getName());
         System.out.println("Stylist       : " + stylist.getName() + " (" + stylist.getSpecialty() + ")");
         System.out.println("Date          : " + date.format(dateFmt));

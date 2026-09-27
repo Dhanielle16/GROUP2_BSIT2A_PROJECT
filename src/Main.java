@@ -14,14 +14,10 @@ public class Main {
 
                 switch (choice) {
                     case 1:
-                        if (handleLogin(scanner)) {
-                            BookingSystem.start(scanner);
-                        }
+                        handleLogIn(scanner);
                         break;
                     case 2:
-                        if (handleSignUp(scanner)) {
-                            BookingSystem.start(scanner);
-                        }
+                        handleSignUp(scanner);
                         break;
                     case 3:
                         System.out.println("\nExiting system. Goodbye!");
@@ -41,7 +37,7 @@ public class Main {
 
     private static void printMainMenu() {
         System.out.println("=================================");
-        System.out.println("     WELCOME TO LUXEBOOK SALON!  ");
+        System.out.println("     WELCOME TO THE SALON SYSTEM  ");
         System.out.println("=================================");
         System.out.println("1. Log In");
         System.out.println("2. Sign Up");
@@ -49,19 +45,74 @@ public class Main {
         System.out.println("=================================");
     }
 
-    private static boolean handleLogin(Scanner scanner) {
-        System.out.println("\n--- LOG IN ---");
+    /**
+     * Shows "as Customer / as Clerk / Back" beneath Log In or Sign Up.
+     * Returns 1 = Customer, 2 = Clerk, 3 = Back.
+     */
+    private static int askRole(Scanner scanner, String action) {
+        while (true) {
+            System.out.println("\n--- " + action.toUpperCase() + " ---");
+            System.out.println("1. " + action + " as Customer");
+            System.out.println("2. " + action + " as Clerk");
+            System.out.println("3. Back");
+            System.out.print("Enter your choice: ");
+
+            if (scanner.hasNextInt()) {
+                int choice = scanner.nextInt();
+                scanner.nextLine();
+
+                if (choice >= 1 && choice <= 3) {
+                    return choice;
+                }
+                System.out.println("\n[!] Invalid choice. Please select 1, 2, or 3.");
+            } else {
+                System.out.println("\n[!] Input must be a valid number.");
+                scanner.nextLine();
+            }
+        }
+    }
+
+    private static void handleLogIn(Scanner scanner) {
+        int role = askRole(scanner, "Log In");
+
+        if (role == 1) {
+            String username = customerLoginPrompt(scanner);
+            Customermenu.start(scanner, username);
+        } else if (role == 2) {
+            if (clerkLoginPrompt(scanner)) {
+                Clerkmenu.start(scanner);
+            }
+        }
+        // role == 3 -> back to main menu, do nothing
+    }
+
+    private static void handleSignUp(Scanner scanner) {
+        int role = askRole(scanner, "Sign Up");
+
+        if (role == 1) {
+            String username = customerSignUpPrompt(scanner);
+            Customermenu.start(scanner, username);
+        } else if (role == 2) {
+            if (clerkSignUpPrompt(scanner)) {
+                Clerkmenu.start(scanner);
+            }
+        }
+        // role == 3 -> back to main menu, do nothing
+    }
+
+    private static String customerLoginPrompt(Scanner scanner) {
+        System.out.println("\n--- CUSTOMER LOG IN ---");
         System.out.print("Username: ");
         String username = scanner.nextLine();
         System.out.print("Password: ");
         String password = scanner.nextLine();
 
-        System.out.println("Logging in user: " + username + "...");
-        return true;
+        System.out.println("Logging in customer: " + username + "...");
+        return username;
     }
 
-    private static boolean handleSignUp(Scanner scanner) {
-        System.out.println("\n--- SIGN UP ---");
+    private static String customerSignUpPrompt(Scanner scanner) {
+        System.out.println("\n--- CUSTOMER SIGN UP ---");
         System.out.print("Enter Username: ");
         String username = scanner.nextLine();
         System.out.print("Enter Email: ");
@@ -70,6 +121,30 @@ public class Main {
         String password = scanner.nextLine();
 
         System.out.println("Account created successfully for: " + username);
+        return username;
+    }
+
+    private static boolean clerkLoginPrompt(Scanner scanner) {
+        System.out.println("\n--- CLERK LOG IN ---");
+        System.out.print("Clerk Username: ");
+        String username = scanner.nextLine();
+        System.out.print("Clerk Password: ");
+        String password = scanner.nextLine();
+
+        Clerk clerk = new Clerk(username);
+        System.out.println("Logging in clerk: " + clerk.getUsername() + "...");
+        return true;
+    }
+
+    private static boolean clerkSignUpPrompt(Scanner scanner) {
+        System.out.println("\n--- CLERK SIGN UP ---");
+        System.out.print("Enter Clerk Username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter Password: ");
+        String password = scanner.nextLine();
+
+        Clerk clerk = new Clerk(username);
+        System.out.println("Clerk account created for: " + clerk.getUsername());
         return true;
     }
 }
