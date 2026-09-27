@@ -2,12 +2,16 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Appointment {
 
-
+    // Cleanup/prep buffer added after every service
     public static final int BUFFER_MINUTES = 15;
+
+    private static final DateTimeFormatter LIST_DATE_FMT = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+    private static final DateTimeFormatter LIST_TIME_FMT = DateTimeFormatter.ofPattern("hh:mm a");
 
     private String customerName;
     private Service service;
@@ -15,6 +19,7 @@ public class Appointment {
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
+    private Appointmentstatus status = Appointmentstatus.PENDING;
 
     public Appointment(String customerName, Service service, Stylist stylist, LocalDate date, LocalTime startTime) {
         this.customerName = customerName;
@@ -49,7 +54,15 @@ public class Appointment {
         return endTime;
     }
 
+    public Appointmentstatus getStatus() {
+        return status;
+    }
 
+    public void setStatus(Appointmentstatus status) {
+        this.status = status;
+    }
+
+    /** True if this appointment's time block (including buffer) overlaps the given window. */
     public boolean overlaps(LocalDate otherDate, LocalTime otherStart, LocalTime otherEnd) {
         if (!this.date.equals(otherDate)) {
             return false;
@@ -90,6 +103,36 @@ public class Appointment {
         }
     }
 
+    /**
+     * Prints a numbered list of appointments in a consistent format.
+     * Set showCustomer to true for admin views (shows who booked it).
+     */
+    public static void printList(List<Appointment> appointments, boolean showCustomer) {
+        for (int i = 0; i < appointments.size(); i++) {
+            Appointment a = appointments.get(i);
+            if (showCustomer) {
+                System.out.printf("%d. %s | %s-%s | Customer: %-10s | Stylist: %-12s | Service: %-18s | Status: %s%n",
+                        i + 1,
+                        a.date.format(LIST_DATE_FMT),
+                        a.startTime.format(LIST_TIME_FMT),
+                        a.endTime.format(LIST_TIME_FMT),
+                        a.customerName,
+                        a.stylist.getName(),
+                        a.service.getName(),
+                        a.status);
+            } else {
+                System.out.printf("%d. %s | %s-%s | Stylist: %-12s | Service: %-18s | Status: %s%n",
+                        i + 1,
+                        a.date.format(LIST_DATE_FMT),
+                        a.startTime.format(LIST_TIME_FMT),
+                        a.endTime.format(LIST_TIME_FMT),
+                        a.stylist.getName(),
+                        a.service.getName(),
+                        a.status);
+            }
+        }
+    }
+
     public void printSummary() {
         DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
         DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("hh:mm a");
@@ -104,6 +147,7 @@ public class Appointment {
         System.out.println("Buffer Time   : " + BUFFER_MINUTES + " mins (cleanup/prep)");
         System.out.println("End Time      : " + endTime.format(timeFmt));
         System.out.printf("Total Price   : PHP %.2f%n", service.getPrice());
+        System.out.println("Status        : " + status + " (awaiting admin approval)");
         System.out.println("=====================================");
     }
 }

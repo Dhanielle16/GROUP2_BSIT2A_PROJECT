@@ -1,4 +1,4 @@
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,28 +12,32 @@ public class Adminmenu {
             System.out.println("   ADMIN DASHBOARD - " + adminUsername.toUpperCase());
             System.out.println("=================================");
             System.out.println("1. View All Appointments");
-            System.out.println("2. Cancel an Appointment");
-            System.out.println("3. Manage Stylists");
-            System.out.println("4. Manage Services");
-            System.out.println("5. Log Out");
+            System.out.println("2. Approve Pending Appointments");
+            System.out.println("3. Delete Cancelled Appointments");
+            System.out.println("4. Manage Stylists");
+            System.out.println("5. Manage Services");
+            System.out.println("6. Log Out");
             System.out.println("=================================");
 
-            int choice = InputUtils.readMenuChoice(scanner, 1, 5);
+            int choice = InputUtils.readMenuChoice(scanner, 1, 6);
 
             switch (choice) {
                 case 1:
                     viewAllAppointments();
                     break;
                 case 2:
-                    cancelAppointment(scanner);
+                    approvePendingAppointments(scanner);
                     break;
                 case 3:
-                    manageStylists(scanner);
+                    deleteCancelledAppointments(scanner);
                     break;
                 case 4:
-                    manageServices(scanner);
+                    manageStylists(scanner);
                     break;
                 case 5:
+                    manageServices(scanner);
+                    break;
+                case 6:
                     System.out.println("\nLogging out...");
                     loggedIn = false;
                     break;
@@ -41,7 +45,7 @@ public class Adminmenu {
         }
     }
 
-
+    // ---------- Appointments ----------
 
     private static void viewAllAppointments() {
         List<Appointment> appointments = AppointmentRegistry.getAllAppointments();
@@ -51,57 +55,64 @@ public class Adminmenu {
             System.out.println("No appointments booked yet.");
             return;
         }
-
-        DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("MMM dd, yyyy");
-        DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("hh:mm a");
-
-        for (int i = 0; i < appointments.size(); i++) {
-            Appointment a = appointments.get(i);
-            System.out.printf("%d. %s | %s-%s | Customer: %-10s | Stylist: %-12s | Service: %s%n",
-                    i + 1,
-                    a.getDate().format(dateFmt),
-                    a.getStartTime().format(timeFmt),
-                    a.getEndTime().format(timeFmt),
-                    a.getCustomerName(),
-                    a.getStylist().getName(),
-                    a.getService().getName());
-        }
+        Appointment.printList(appointments, true);
     }
 
-    private static void cancelAppointment(Scanner scanner) {
-        List<Appointment> appointments = AppointmentRegistry.getAllAppointments();
+    private static void approvePendingAppointments(Scanner scanner) {
+        List<Appointment> pending = new ArrayList<>();
+        for (Appointment a : AppointmentRegistry.getAllAppointments()) {
+            if (a.getStatus() == Appointmentstatus.PENDING) {
+                pending.add(a);
+            }
+        }
 
-        if (appointments.isEmpty()) {
-            System.out.println("\nNo appointments to cancel.");
+        if (pending.isEmpty()) {
+            System.out.println("\nNo pending appointments to approve.");
             return;
         }
 
-        viewAllAppointments();
-        System.out.print("\nEnter the number to cancel (0 to go back): ");
+        System.out.println("\n--- PENDING APPOINTMENTS ---");
+        Appointment.printList(pending, true);
+        System.out.println("\nWhich one do you want to approve? (0 to go back)");
 
-        while (true) {
-            if (scanner.hasNextInt()) {
-                int choice = scanner.nextInt();
-                scanner.nextLine();
-
-                if (choice == 0) {
-                    return;
-                }
-                if (choice >= 1 && choice <= appointments.size()) {
-                    Appointment removed = appointments.remove(choice - 1);
-                    System.out.println("\nCancelled appointment for " + removed.getCustomerName()
-                            + " with " + removed.getStylist().getName());
-                    return;
-                }
-                System.out.print("[!] Enter a number between 0 and " + appointments.size() + ": ");
-            } else {
-                System.out.print("[!] Please enter a valid number: ");
-                scanner.nextLine();
-            }
+        int choice = InputUtils.readMenuChoice(scanner, 0, pending.size());
+        if (choice == 0) {
+            return;
         }
+
+        Appointment toApprove = pending.get(choice - 1);
+        toApprove.setStatus(Appointmentstatus.APPROVED);
+        System.out.println("\nApproved appointment for " + toApprove.getCustomerName() + ".");
     }
 
+    private static void deleteCancelledAppointments(Scanner scanner) {
+        List<Appointment> cancelled = new ArrayList<>();
+        for (Appointment a : AppointmentRegistry.getAllAppointments()) {
+            if (a.getStatus() == Appointmentstatus.CANCELLED) {
+                cancelled.add(a);
+            }
+        }
 
+        if (cancelled.isEmpty()) {
+            System.out.println("\nNo cancelled appointments to delete.");
+            return;
+        }
+
+        System.out.println("\n--- CANCELLED APPOINTMENTS ---");
+        Appointment.printList(cancelled, true);
+        System.out.println("\nWhich one do you want to permanently delete? (0 to go back)");
+
+        int choice = InputUtils.readMenuChoice(scanner, 0, cancelled.size());
+        if (choice == 0) {
+            return;
+        }
+
+        Appointment toDelete = cancelled.get(choice - 1);
+        AppointmentRegistry.getAllAppointments().remove(toDelete);
+        System.out.println("\nDeleted the cancelled appointment for " + toDelete.getCustomerName() + ".");
+    }
+
+    // ---------- Stylists ----------
 
     private static void manageStylists(Scanner scanner) {
         boolean inMenu = true;
@@ -183,7 +194,13 @@ public class Adminmenu {
         }
     }
 
-
+    /**
+     * Manually flips a stylist's front-desk status (e.g. currently busy with a
+     * walk-in, or done and free again). This is independent of the scheduled
+     * appointment times tracked by AppointmentRegistry -- a stylist marked
+     * "Busy" here won't be offered for ANY new booking until marked available
+     * again, regardless of the date/time requested.
+     */
     private static void setStylistStatus(Scanner scanner, boolean available) {
         printStylists();
         String label = available ? "Available" : "Busy";
@@ -205,7 +222,7 @@ public class Adminmenu {
         }
     }
 
-
+    // ---------- Services ----------
 
     private static void manageServices(Scanner scanner) {
         boolean inMenu = true;

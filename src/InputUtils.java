@@ -1,9 +1,13 @@
 import java.util.Scanner;
 
-
+/**
+ * Shared input helpers. These only print an inline error and re-ask on
+ * invalid input -- they never redraw a menu or list that was already
+ * printed above them.
+ */
 public class InputUtils {
 
-
+    /** Keeps asking "Enter your choice: " until a number between min and max is entered. */
     public static int readMenuChoice(Scanner scanner, int min, int max) {
         while (true) {
             System.out.print("Enter your choice: ");
