@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Appointment {
 
-    // Cleanup/prep buffer added after every service
+
     public static final int BUFFER_MINUTES = 15;
 
     private String customerName;
@@ -49,10 +49,7 @@ public class Appointment {
         return endTime;
     }
 
-    /**
-     * Returns true if this appointment's time block (including buffer)
-     * overlaps with the given date/start/end window.
-     */
+
     public boolean overlaps(LocalDate otherDate, LocalTime otherStart, LocalTime otherEnd) {
         if (!this.date.equals(otherDate)) {
             return false;

@@ -3,8 +3,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class StylistMenu {
-    // Static/shared so that stylists added or removed by a clerk
-    // persist across every part of the program (not reset per instance).
+
     private static List<Stylist> stylists = new ArrayList<>();
 
     static {
@@ -26,10 +25,7 @@ public class StylistMenu {
         return stylists.removeIf(s -> s.getName().equalsIgnoreCase(name));
     }
 
-    /**
-     * Lets the user choose from a pre-filtered list of stylists
-     * (e.g. only those available at the requested time slot).
-     */
+
     public Stylist chooseStylist(Scanner scanner, List<Stylist> availableStylists) {
         Stylist selected = null;
 

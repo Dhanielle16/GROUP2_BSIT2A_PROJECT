@@ -45,10 +45,7 @@ public class Main {
         System.out.println("=================================");
     }
 
-    /**
-     * Shows "as Customer / as Clerk / Back" beneath Log In or Sign Up.
-     * Returns 1 = Customer, 2 = Clerk, 3 = Back.
-     */
+
     private static int askRole(Scanner scanner, String action) {
         while (true) {
             System.out.println("\n--- " + action.toUpperCase() + " ---");
@@ -83,7 +80,7 @@ public class Main {
                 Clerkmenu.start(scanner);
             }
         }
-        // role == 3 -> back to main menu, do nothing
+
     }
 
     private static void handleSignUp(Scanner scanner) {
@@ -97,7 +94,7 @@ public class Main {
                 Clerkmenu.start(scanner);
             }
         }
-        // role == 3 -> back to main menu, do nothing
+
     }
 
     private static String customerLoginPrompt(Scanner scanner) {
