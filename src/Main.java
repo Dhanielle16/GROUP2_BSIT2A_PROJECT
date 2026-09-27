@@ -55,7 +55,7 @@ public class Main {
                 Adminmenu.start(scanner, adminUsername);
                 break;
             case 3:
-                break; // back to main menu
+                break;
         }
     }
 

@@ -76,7 +76,7 @@ public class Appointment {
         this.status = status;
     }
 
-    // Calculate total duration of all selected services
+
     public int getTotalServiceDuration() {
 
         int total = 0;
@@ -88,7 +88,7 @@ public class Appointment {
         return total;
     }
 
-    // Calculate total price of all selected services
+
     public double getTotalPrice() {
 
         double total = 0;
@@ -100,7 +100,7 @@ public class Appointment {
         return total;
     }
 
-    // Total time occupied by the stylist, including buffer
+
     public int getTotalOccupiedMinutes() {
         return getTotalServiceDuration() + BUFFER_MINUTES;
     }

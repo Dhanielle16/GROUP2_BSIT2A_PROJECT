@@ -14,12 +14,12 @@ public class AppointmentRegistry {
             LocalTime start,
             LocalTime end) {
 
-        // Check if admin has manually marked the stylist as busy
+
         if (!stylist.isAvailable()) {
             return false;
         }
 
-        // Check existing appointments
+
         for (Appointment appt : BOOKED_APPOINTMENTS) {
 
             // Cancelled appointments no longer block the time
@@ -27,13 +27,13 @@ public class AppointmentRegistry {
                 continue;
             }
 
-            // Check if this is the same stylist
+
             if (!appt.getStylist().getName()
                     .equalsIgnoreCase(stylist.getName())) {
                 continue;
             }
 
-            // Check for overlapping appointment
+
             if (appt.overlaps(date, start, end)) {
                 return false;
             }

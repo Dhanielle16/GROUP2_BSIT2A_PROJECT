@@ -10,9 +10,7 @@ public class BookingSystem {
 
         System.out.println("\n--- BOOK AN APPOINTMENT ---");
 
-        // ==========================================
-        // STEP 1: CHOOSE SERVICES
-        // ==========================================
+
 
         List<Service> selectedServices = new ArrayList<>();
 
@@ -65,9 +63,7 @@ public class BookingSystem {
             }
         }
 
-        // ==========================================
-        // DISPLAY SELECTED SERVICES
-        // ==========================================
+
 
         System.out.println(
                 "\n===== SELECTED SERVICES =====");
@@ -119,16 +115,12 @@ public class BookingSystem {
         System.out.println(
                 "==========================================");
 
-        // ==========================================
-        // STEP 2: CHOOSE DATE
-        // ==========================================
+
 
         LocalDate date =
                 Appointment.askDate(scanner);
 
-        // ==========================================
-        // STEP 3: CHOOSE TIME
-        // ==========================================
+
 
         LocalTime startTime;
 
@@ -144,9 +136,7 @@ public class BookingSystem {
                             totalOccupiedMinutes
                     );
 
-            // ==========================================
-            // FIND AVAILABLE STYLISTS
-            // ==========================================
+
 
             availableStylists = new ArrayList<>();
 
@@ -163,9 +153,6 @@ public class BookingSystem {
                 }
             }
 
-            // ==========================================
-            // NO STYLIST AVAILABLE
-            // ==========================================
 
             if (availableStylists.isEmpty()) {
 
@@ -187,9 +174,6 @@ public class BookingSystem {
             }
         }
 
-        // ==========================================
-        // STEP 4: CHOOSE STYLIST
-        // ==========================================
 
         Stylist chosenStylist =
                 StylistMenu.chooseStylist(
@@ -197,9 +181,7 @@ public class BookingSystem {
                         availableStylists
                 );
 
-        // ==========================================
-        // STEP 5: CREATE ONE APPOINTMENT
-        // ==========================================
+
 
         Appointment appointment =
                 new Appointment(
@@ -210,9 +192,7 @@ public class BookingSystem {
                         startTime
                 );
 
-        // ==========================================
-        // STEP 6: DOUBLE-BOOKING SAFETY CHECK
-        // ==========================================
+
 
         if (!AppointmentRegistry.isStylistAvailable(
                 chosenStylist,
@@ -230,24 +210,18 @@ public class BookingSystem {
             return;
         }
 
-        // ==========================================
-        // STEP 7: SAVE APPOINTMENT
-        // ==========================================
+
 
         AppointmentRegistry.addAppointment(
                 appointment
         );
 
-        // ==========================================
-        // STEP 8: DISPLAY CONFIRMATION
-        // ==========================================
+
 
         appointment.printSummary();
     }
 
-    // ==============================================
-    // CALCULATE TOTAL SERVICE DURATION
-    // ==============================================
+
 
     private static int getTotalDuration(
             List<Service> services) {
@@ -262,9 +236,7 @@ public class BookingSystem {
         return total;
     }
 
-    // ==============================================
-    // CALCULATE TOTAL PRICE
-    // ==============================================
+
 
     private static double getTotalPrice(
             List<Service> services) {
