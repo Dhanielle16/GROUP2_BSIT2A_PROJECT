@@ -2,9 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Static list of salon services. Add new services here.
- */
+
 public class ServiceMenu {
     private static final List<Service> SERVICES = new ArrayList<>();
 

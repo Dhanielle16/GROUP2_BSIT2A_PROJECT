@@ -3,11 +3,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Tracks every appointment booked this session so the system can prevent
- * double-booking a stylist for an overlapping time slot.
- * (In-memory only — for production this would be backed by a database.)
- */
+
 public class AppointmentRegistry {
     private static final List<Appointment> BOOKED_APPOINTMENTS = new ArrayList<>();
 

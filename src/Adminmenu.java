@@ -45,7 +45,7 @@ public class Adminmenu {
         }
     }
 
-    // ---------- Appointments ----------
+
 
     private static void viewAllAppointments() {
         List<Appointment> appointments = AppointmentRegistry.getAllAppointments();
@@ -112,7 +112,7 @@ public class Adminmenu {
         System.out.println("\nDeleted the cancelled appointment for " + toDelete.getCustomerName() + ".");
     }
 
-    // ---------- Stylists ----------
+
 
     private static void manageStylists(Scanner scanner) {
         boolean inMenu = true;
@@ -194,13 +194,7 @@ public class Adminmenu {
         }
     }
 
-    /**
-     * Manually flips a stylist's front-desk status (e.g. currently busy with a
-     * walk-in, or done and free again). This is independent of the scheduled
-     * appointment times tracked by AppointmentRegistry -- a stylist marked
-     * "Busy" here won't be offered for ANY new booking until marked available
-     * again, regardless of the date/time requested.
-     */
+
     private static void setStylistStatus(Scanner scanner, boolean available) {
         printStylists();
         String label = available ? "Available" : "Busy";
@@ -222,7 +216,7 @@ public class Adminmenu {
         }
     }
 
-    // ---------- Services ----------
+
 
     private static void manageServices(Scanner scanner) {
         boolean inMenu = true;

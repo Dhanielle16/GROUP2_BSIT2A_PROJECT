@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Appointment {
 
-    // Cleanup/prep buffer added after every service
+
     public static final int BUFFER_MINUTES = 15;
 
     private static final DateTimeFormatter LIST_DATE_FMT = DateTimeFormatter.ofPattern("MMM dd, yyyy");
@@ -62,7 +62,7 @@ public class Appointment {
         this.status = status;
     }
 
-    /** True if this appointment's time block (including buffer) overlaps the given window. */
+
     public boolean overlaps(LocalDate otherDate, LocalTime otherStart, LocalTime otherEnd) {
         if (!this.date.equals(otherDate)) {
             return false;
@@ -103,10 +103,6 @@ public class Appointment {
         }
     }
 
-    /**
-     * Prints a numbered list of appointments in a consistent format.
-     * Set showCustomer to true for admin views (shows who booked it).
-     */
     public static void printList(List<Appointment> appointments, boolean showCustomer) {
         for (int i = 0; i < appointments.size(); i++) {
             Appointment a = appointments.get(i);
